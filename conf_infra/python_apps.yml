@@ -1,0 +1,24 @@
+---
+- name: Create 'recom' user
+  sudo: true
+  user: name={{ user_name }} password={{ user_password }}
+
+- name: Install vim
+  sudo: true
+  apt: pkg=vim
+
+- name: Git installation
+  sudo: true
+  apt: name=git state=latest
+
+- name: Install pip
+  sudo: true
+  apt: pkg=python-pip
+
+- name: Install virtualenv
+  sudo: true
+  command: pip install virtualenv
+
+- name: Install Flask
+  sudo: true
+  command: pip install --user Flask

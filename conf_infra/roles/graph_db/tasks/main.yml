@@ -1,0 +1,82 @@
+---
+# Required for curl
+- name: Install pip & curl
+  sudo: true
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - python-pip
+    - curl
+
+- name: Install httplib2
+  sudo: true
+  pip: name=httplib2
+
+# Database management
+# Requires JAVA 8
+- name: Add update repo
+  sudo: true
+  apt_repository: repo="deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" state=present
+
+- name: Add update SRC repo
+  sudo: true
+  apt_repository: repo="deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" state=present
+
+- name: add key
+  sudo: true
+  apt_key:  keyserver=keyserver.ubuntu.com id=EEA14886 state=present
+
+- name: Automatically select the Oracle License Selection
+  sudo: true
+  shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+
+- name: Automatically seen the Oracle License Seen
+  sudo: true
+  shell: echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
+
+- name: Install Java
+  sudo: true
+  apt: pkg="oracle-java8-installer" update-cache=true state=latest
+
+# Global install Neo4j
+# Executables in /usr/bin/neo4j
+# Conf in /etc/neo4j
+# Logs in /var/log/neo4j
+# Data in var/lib/neo4j
+- name: Get Neo4j key
+  sudo: true
+  shell: wget -O - https://debian.neo4j.org/neotechnology.gpg.key | sudo apt-key add -
+
+- name: Add repo
+  sudo: true
+  shell: echo 'deb http://debian.neo4j.org/repo stable/' >/tmp/neo4j.list
+
+- name: Add repo to source list
+  sudo: true
+  shell: mv /tmp/neo4j.list /etc/apt/sources.list.d
+
+- name: Install Neo4j
+  sudo: true
+  apt: pkg="neo4j={{ neo4j.version }}" update-cache=true
+  register: stdout
+  notify:
+    - start neo4j
+
+- name: set password
+  sudo: true
+  copy: src=neo4j_auth_{{ environment_type }} dest=/var/lib/neo4j/data/dbms/auth
+
+- name: Add JDBC Mysql Connector plugins
+  sudo: true
+  copy: src=mysql-connector-java-5.1.38-bin.jar dest=/var/lib/neo4j/plugins/mysql-connector-java-5.1.38-bin.jar
+  when: stdout | success
+
+- name: Add APOC procedures
+  sudo: true
+  copy: src=apoc-1.0.0-SNAPSHOT.jar dest=/var/lib/neo4j/plugins/apoc-1.0.0-SNAPSHOT.jar
+  when: stdout | success
+
+- name: Database name
+  sudo: true
+  lineinfile: dest=/etc/neo4j/neo4j.conf line="dbms.active_database=kwanko.graph" insertafter="#dbms.active_database=graph.db"  state=present
+
+- include: "{{environment_type}}.yml"

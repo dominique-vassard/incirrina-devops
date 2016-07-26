@@ -1,0 +1,6 @@
+---
+miniconda:
+  version: 2-4.0.5
+  home: /opt/Miniconda
+  required_packages:
+    - matplotlib

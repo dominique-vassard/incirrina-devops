@@ -1,0 +1,3 @@
+---
+- name: remove miniconda installer
+  file: path=/tmp/miniconda_installer.sh state=absent
