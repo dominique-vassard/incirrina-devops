@@ -72,7 +72,7 @@
 
 - name: Add APOC procedures
   sudo: true
-  copy: src=apoc-1.0.0-SNAPSHOT.jar dest=/var/lib/neo4j/plugins/apoc-1.0.0-SNAPSHOT.jar
+  copy: src=apoc-{{ apoc.version }}.jar dest=/var/lib/neo4j/plugins/apoc-1.0.0-SNAPSHOT.jar
   when: stdout | success
 
 - name: Database name

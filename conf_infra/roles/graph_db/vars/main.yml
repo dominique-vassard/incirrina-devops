@@ -3,3 +3,5 @@ neo4j:
   dl_link: http://info.neo4j.com/download-thanks.html?edition=community&release=3.0.3&flavour=unix
   version: 3.0.3
   password: OTQ5NWJlNDA2NDBmY2NiZGUwOGUzZjQ1
+apoc:
+  version: 1.1.0
