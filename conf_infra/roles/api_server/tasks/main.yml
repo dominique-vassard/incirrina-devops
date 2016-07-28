@@ -1,5 +1,9 @@
 ---
 - include: ../../../python_apps.yml
 
+- name: Install Flask
+  sudo: true
+  command: pip install --user Flask
+
 - name: Create directory
   file: path={{ dev_home }}/api_server state=directory

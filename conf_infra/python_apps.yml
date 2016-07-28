@@ -19,6 +19,34 @@
   sudo: true
   command: pip install virtualenv
 
-- name: Install Flask
+- name: Download Miniconda installer
+  get_url: url=http://repo.continuum.io/miniconda/Miniconda{{ miniconda.version }}-Linux-x86_64.sh dest=/tmp/miniconda_installer.sh
+
+- name: Install Miniconda
   sudo: true
-  command: pip install --user Flask
+  command: bash /tmp/miniconda_installer.sh -b -p {{ miniconda.home }}
+  args:
+    creates: "{{ miniconda.home }}"
+  notify:
+    - remove miniconda installer
+
+  # - name: remove conda-curl since it conflicts with the system curl
+  #   command: /opt/anaconda/bin/conda remove -y curl
+
+- name: Add miniconda to the PATH
+  lineinfile: dest=~/.bashrc line="export PATH={{ miniconda.home }}/bin:$PATH" insertafter=EOF state=present
+
+- name: link conda for sudo use
+  sudo: true
+  file: src={{ miniconda.home }}/bin/conda dest=/usr/bin/conda state=link
+
+- name: Install neo4j-driver for all users
+  # sudo: true
+  # pip: name=neo4j-driver extra_args='--user'
+  command: pip install --user neo4j-driver
+
+# No packages are required for the moment
+# - name: Add packages
+#   sudo: true
+#   command: conda install -y {{ item }}
+#   with_items: miniconda.required_packages

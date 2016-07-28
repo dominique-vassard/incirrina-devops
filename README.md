@@ -1,6 +1,11 @@
 # SETUP "Incirrina" infrastructure
 This repository contains the recipes to create a VM and configure environment required for the Incirrina project, the Kwanko data driven counsellor.
 
+## TODOs
+- There's still problem with the user 'recom'
+- Flask is not properly installed
+- Manage virtual environment (?)
+
 ## Requirements
 Vagrant
 Ansible

@@ -61,6 +61,10 @@
   notify:
     - start neo4j
 
+# Added due to KCO bug appearance: Directory /var/lib/neo4j/data/dbms/ wasn't present
+- name: Create dbms/ directory
+  file: path=/var/lib/neo4j/data/dbms/ state=directory
+
 - name: set password
   sudo: true
   copy: src=neo4j_auth_{{ environment_type }} dest=/var/lib/neo4j/data/dbms/auth
