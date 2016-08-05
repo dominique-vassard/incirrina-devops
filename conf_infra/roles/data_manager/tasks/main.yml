@@ -1,8 +1,21 @@
 ---
 - include: ../../../python_apps.yml
 
+# - include: ../../../manage_keys_{{ environment_type }}.yml
+
+- name: Add packages
+  sudo: true
+  command: "{{ miniconda.home }}/bin/conda install -qy {{ item }} -n {{ env_name }}"
+  with_items: miniconda.required_packages
+  args:
+    creates: "{{ miniconda.home }}/envs/{{ env_name }}/lib/python2.7/site-packages/numpy"
+  notify: deactivate current env
+
 - name: Create directory
   file: path={{ dev_home }}/data_manager state=directory
 
 - name: Copy test file
   copy: src=test_connector.py dest={{ dev_home }}/data_manager/test_connector.py
+
+# - name: Clone repository
+#   git: repo=gitlab@git.c2bdev.net:dominique.vassard/Incirrina-data-manager.git dest=/home/recom/data_manager accept_hostkey=true key_file="/home/vagrant/.ssh/id_rsa"

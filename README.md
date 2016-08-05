@@ -2,9 +2,13 @@
 This repository contains the recipes to create a VM and configure environment required for the Incirrina project, the Kwanko data driven counsellor.
 
 ## TODOs
-- There's still problem with the user 'recom'
-- Flask is not properly installed
-- Manage virtual environment (?)
+- Git clone doesn't due to problem with key/passphrase
+- Add frontend role with PHP, nginx, etc
+- Add better test files (that uses all installed libs)
+2016/08/05
+- [Not needed] There's still problem with the user 'recom'
+- [Fixed] Flask is not properly installed
+- [Fixed]Manage virtual environment (?)
 
 ## Requirements
 Vagrant
@@ -46,21 +50,26 @@ The following folders will be synced:
     + Install Java 8
     + Install Neo4j globally
     + Add apoc procedures plugin
-    + Add JDBC mysql conenctor plugin
+    + Add JDBC mysql connector plugin
     + Set database password
+    + change import directory and make it writable
     + Start database
 - *data_manager* which configures the data manager
     + Create user recom if it doesn't exist 
     + Install pip
     + Install Miniconda
-    + Install Flask
-    + Install neo4j-driver
+    + Create data_manager environment with numpy
+    + Install neo4j-driver, mysql-connector-python, matplotlib
+    + Creates public/private key from host ones
     + Create /home/recom/data_manager
     + Copy a test file in /home/recom/data_manager
 - *api_server*
     + Create user recom if it doesn't exist 
     + Install pip
+    + Install Miniconda
+    + Create api_server environment with numpy
     + Install Flask
+    + Creates public/private key from host ones
     + Create /home/recom/api_server
 - *frontend*
     + To be configured

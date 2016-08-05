@@ -1,6 +1,8 @@
 ---
+env_name: data_manager
 miniconda:
   version: 2-4.0.5
   home: /opt/Miniconda
   required_packages:
+    - mysql-connector-python
     - matplotlib

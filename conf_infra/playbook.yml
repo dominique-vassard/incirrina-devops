@@ -1,12 +1,13 @@
 ---
 # Playbook for recommander dev_home
 # TODO: frontend conf
-# TODO: USe vault to store passwords
+# TODO: Use vault to store passwords
 - hosts: all
   user: recom
   vars:
     user_name: recom
-    user_password: NWQ1NzY3ZT
+    # python -c 'import crypt; print crypt.crypt("NWQ1NzY3ZT", "Inc1rr1na;veryPR21V4TEs3cr3t!")'
+    user_password: InpQ6KYcqImH.
     dev_home: /home/recom
     environment_type: dev
   roles:

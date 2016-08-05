@@ -1,7 +1,4 @@
 ---
-- name: remove miniconda installer
-  file: path=/tmp/miniconda_installer.sh state=absent
-
 - name: deactivate current env
   sudo: true
   shell: source {{ miniconda.home }}/bin/deactivate

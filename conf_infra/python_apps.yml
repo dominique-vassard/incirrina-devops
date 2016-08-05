@@ -1,7 +1,7 @@
 ---
 - name: Create 'recom' user
   sudo: true
-  user: name={{ user_name }} password={{ user_password }}
+  user: name={{ user_name }} password={{ user_password }} groups="sudo" shell=/bin/bash
 
 - name: Install vim
   sudo: true
@@ -19,14 +19,21 @@
   sudo: true
   command: pip install virtualenv
 
+- name: Create .bashrc
+  sudo: true
+  # shell: su - recom -c 'cp /etc/skel/.bashrc /home/recom/'
+  copy: src=/etc/skel/.bashrc dest=/home/recom/.bashrc
+
 - name: Download Miniconda installer
-  get_url: url=http://repo.continuum.io/miniconda/Miniconda{{ miniconda.version }}-Linux-x86_64.sh dest=/tmp/miniconda_installer.sh
+  get_url: url=http://repo.continuum.io/miniconda/Miniconda{{ miniconda.version }}-Linux-x86_64.sh dest=/tmp/miniconda_installer.sh mode=0755
 
 - name: Install Miniconda
   sudo: true
+  # become_user: recom
+  # shell: su recom -c 'bash /tmp/miniconda_installer.sh -b -p {{ miniconda.home }}'
   command: bash /tmp/miniconda_installer.sh -b -p {{ miniconda.home }}
   args:
-    creates: "{{ miniconda.home }}"
+    creates: "{{ miniconda.home }}/bin"
   notify:
     - remove miniconda installer
 
@@ -34,19 +41,30 @@
   #   command: /opt/anaconda/bin/conda remove -y curl
 
 - name: Add miniconda to the PATH
-  lineinfile: dest=~/.bashrc line="export PATH={{ miniconda.home }}/bin:$PATH" insertafter=EOF state=present
-
-- name: link conda for sudo use
   sudo: true
-  file: src={{ miniconda.home }}/bin/conda dest=/usr/bin/conda state=link
+  lineinfile: dest=/home/recom/.bashrc line="export PATH={{ miniconda.home }}/bin:$PATH" insertafter=EOF state=present
 
-- name: Install neo4j-driver for all users
-  # sudo: true
-  # pip: name=neo4j-driver extra_args='--user'
-  command: pip install --user neo4j-driver
+- name: Give .bashrc property to recom user
+  sudo: true
+  file: path=/home/recom/.bashrc owner=recom group=recom mode=0644
 
-# No packages are required for the moment
-# - name: Add packages
-#   sudo: true
-#   command: conda install -y {{ item }}
-#   with_items: miniconda.required_packages
+- name: Create environment
+  sudo: true
+  command: "{{ miniconda.home }}/bin/conda create -q -y -n {{ env_name}} numpy"
+  # shell: "su recom -c '{{ miniconda.home }}/bin/conda create -y -n data_manager mysql-connector-python'"
+  args:
+    creates: "{{ miniconda.home }}/envs/{{ env_name}}"
+  register: env_creation
+
+- name: Activate environment
+  sudo: true
+  # shell: 'su recom -c source activate data_manager'
+  shell: source {{ miniconda.home }}/bin/activate {{ env_name}}
+  when: env_creation
+  args:
+    executable: /bin/bash
+
+- name: Install neo4j-driver
+  sudo: true
+  # shell: 'su recom -c pip install neo4j-driver'
+  command: "{{ miniconda.home }}/envs/{{ env_name}}/bin/pip install neo4j-driver"
