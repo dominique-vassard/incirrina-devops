@@ -68,7 +68,7 @@ The following folders will be synced:
     + Install pip
     + Install Miniconda
     + Create api_server environment with numpy
-    + Install Flask
+    + Install Flask, Flask JSON RPC
     + Creates public/private key from host ones
     + Create /home/recom/api_server
 - *frontend*
