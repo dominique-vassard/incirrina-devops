@@ -42,29 +42,30 @@
 
 - name: Add miniconda to the PATH
   sudo: true
-  lineinfile: dest=/home/recom/.bashrc line="export PATH={{ miniconda.home }}/bin:$PATH" insertafter=EOF state=present
+  # lineinfile: dest=/home/recom/.bashrc line="export PATH={{ miniconda.home }}/bin:$PATH" insertafter=EOF state=present
+  lineinfile: dest={{ user_home }}/.bashrc line="export PATH={{ miniconda.home }}/bin:$PATH" insertafter=EOF state=present
 
 - name: Give .bashrc property to recom user
   sudo: true
-  file: path=/home/recom/.bashrc owner=recom group=recom mode=0644
+  # file: path=/home/recom/.bashrc owner=recom group=recom mode=0644
+  file: path={{ user_home }}/.bashrc owner=recom group=recom mode=0644
 
-- name: Create environment
-  sudo: true
-  command: "{{ miniconda.home }}/bin/conda create -q -y -n {{ env_name}} numpy"
-  # shell: "su recom -c '{{ miniconda.home }}/bin/conda create -y -n data_manager mysql-connector-python'"
-  args:
-    creates: "{{ miniconda.home }}/envs/{{ env_name}}"
-  register: env_creation
-
-- name: Activate environment
-  sudo: true
-  # shell: 'su recom -c source activate data_manager'
-  shell: source {{ miniconda.home }}/bin/activate {{ env_name}}
-  when: env_creation
+- name: Source .bashrc
+  shell: source {{ user_home }}/.bashrc
   args:
     executable: /bin/bash
 
+- name: Create environment
+  # sudo: true
+  command: "{{ miniconda.home }}/bin/conda create -yn {{ env_name}} numpy"
+  # shell: "su recom -c '{{ miniconda.home }}/bin/conda create -y -n data_manager mysql-connector-python'"
+  args:
+    # creates: "{{ miniconda.home }}/envs/{{ env_name}}"
+    creates: "{{ user_home }}/.conda/envs/{{ env_name }}"
+  register: env_creation
+
 - name: Install neo4j-driver
   sudo: true
-  # shell: 'su recom -c pip install neo4j-driver'
-  command: "{{ miniconda.home }}/envs/{{ env_name}}/bin/pip install neo4j-driver"
+  # command: "{{ miniconda.home }}/envs/{{ env_name}}/bin/pip install neo4j-driver"
+  command: "{{ user_home }}/.conda/envs/{{ env_name}}/bin/pip install neo4j-driver"
+

@@ -10,8 +10,9 @@
     user_password: InpQ6KYcqImH.
     dev_home: /home/recom
     environment_type: dev
+    user_home: /home/vagrant
   roles:
-    - graph_db
+    # - graph_db
     - data_manager
     - api_server
     # - frontend

@@ -1,15 +1,16 @@
 ---
 - include: ../../../python_apps.yml
 
+# Manage public/private keys
 # - include: ../../../manage_keys_{{ environment_type }}.yml
 
 - name: Add packages
-  sudo: true
+  # sudo: true
   command: "{{ miniconda.home }}/bin/conda install -qy {{ item }} -n {{ env_name }}"
   with_items: miniconda.required_packages
   args:
     creates: "{{ miniconda.home }}/envs/{{ env_name }}/lib/python2.7/site-packages/numpy"
-  notify: deactivate current env
+  # notify: deactivate current env
 
 - name: Create directory
   file: path={{ dev_home }}/data_manager state=directory

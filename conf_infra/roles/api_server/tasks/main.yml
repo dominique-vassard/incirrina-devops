@@ -3,7 +3,7 @@
 
 - name: Install Flask
   sudo: true
-  command: "{{ miniconda.home }}/envs/{{ env_name}}/bin/pip install Flask"
+  command: "{{ user_home }}/.conda/envs/{{ env_name}}/bin/pip install Flask"
 
 - name: Create directory
   file: path={{ dev_home }}/api_server state=directory
