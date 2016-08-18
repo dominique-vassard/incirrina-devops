@@ -1,8 +1,3 @@
-- name: DEV ONLY Conf > Accept non-local BOLT connections
-  sudo: true
-  lineinfile: dest=/etc/neo4j/neo4j.conf line="dbms.connector.bolt.address=0.0.0.0:7687" insertafter="#dbms.connector.bolt.address=0.0.0.0:7687" state=present
-  when: environment_type == 'dev'
-
 - name: DEV ONLY Conf > Accept non-local HTTP connections
   sudo: true
   lineinfile: dest=/etc/neo4j/neo4j.conf line="dbms.connector.http.address=0.0.0.0:7474" insertafter="#dbms.connector.http.address=0.0.0.0:7474" state=present

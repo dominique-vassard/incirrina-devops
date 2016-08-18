@@ -83,6 +83,10 @@
   sudo: true
   lineinfile: dest=/etc/neo4j/neo4j.conf line="dbms.active_database=kwanko.graph" insertafter="#dbms.active_database=graph.db"  state=present
 
+- name: Accept non-local BOLT connections
+  sudo: true
+  lineinfile: dest=/etc/neo4j/neo4j.conf line="dbms.connector.bolt.address=0.0.0.0:7687" insertafter="# dbms.connector.bolt.address=0.0.0.0:7687" state=present
+
 - name: Change import directory (from usr/share/neo4j/import to /var/lib/neo4j/import)
   sudo: true
   lineinfile: dest=/etc/neo4j/neo4j.conf regexp="dbms.directories.import=import" line="dbms.directories.import=/var/lib/neo4j/import"
