@@ -3,6 +3,7 @@
 # TODO: frontend conf
 # TODO: Use vault to store passwords
 - hosts: all
+  remote_user: root
   user: recom
   vars:
     user_name: recom

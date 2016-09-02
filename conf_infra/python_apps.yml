@@ -60,12 +60,12 @@
   command: "{{ miniconda.home }}/bin/conda create -yn {{ env_name}} numpy"
   # shell: "su recom -c '{{ miniconda.home }}/bin/conda create -y -n data_manager mysql-connector-python'"
   args:
-    # creates: "{{ miniconda.home }}/envs/{{ env_name}}"
-    creates: "{{ user_home }}/.conda/envs/{{ env_name }}"
+    creates: "{{ miniconda.home }}/envs/{{ env_name}}"
+    # creates: "{{ user_home }}/.conda/envs/{{ env_name }}"
   register: env_creation
 
 - name: Install neo4j-driver
   sudo: true
-  # command: "{{ miniconda.home }}/envs/{{ env_name}}/bin/pip install neo4j-driver"
-  command: "{{ user_home }}/.conda/envs/{{ env_name}}/bin/pip install neo4j-driver"
+  command: "{{ miniconda.home }}/envs/{{ env_name}}/bin/pip install neo4j-driver"
+  # command: "{{ user_home }}/.conda/envs/{{ env_name}}/bin/pip install neo4j-driver"
 

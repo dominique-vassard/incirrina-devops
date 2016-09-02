@@ -3,11 +3,13 @@
 
 - name: Install Flask
   sudo: true
-  command: "{{ user_home }}/.conda/envs/{{ env_name}}/bin/pip install Flask"
+  command: "{{ miniconda.home }}/envs/{{ env_name}}/bin/pip install Flask"
+  # command: "{{ user_home }}/.conda/envs/{{ env_name}}/bin/pip install Flask"
 
 - name: Install Flask JSON RPC
   sudo: true
-  command: "{{ user_home }}/.conda/envs/{{ env_name}}/bin/pip install Flask-JSONRPC"
+  command: "{{ miniconda.home }}/envs/{{ env_name}}/bin/pip install Flask-JSONRPC"
+  # command: "{{ user_home }}/.conda/envs/{{ env_name}}/bin/pip install Flask-JSONRPC"
 
 - name: Create directory
   file: path={{ dev_home }}/api_server state=directory
